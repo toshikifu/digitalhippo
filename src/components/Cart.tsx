@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import { Separator } from "@radix-ui/react-separator";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice } from "@/src/lib/utils";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import Image from "next/image";
