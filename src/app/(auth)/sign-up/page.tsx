@@ -1,19 +1,19 @@
 "use client";
 
-import { Input } from "@/src/components/ui/input";
 import { Icons } from "@/src/components/Icons";
 import { Button, buttonVariants } from "@/src/components/ui/button";
+import { Input } from "@/src/components/ui/input";
 import { cn } from "@/src/lib/utils";
-import { Label } from "@radix-ui/react-label";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   AuthCredentialsValidator,
   TAuthCredentialValidator,
 } from "@/src/lib/valitators/accont-credentialsvalidator";
+import { trpc } from "@/src/trpc/client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Label } from "@radix-ui/react-label";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
 
 const Page = () => {
   const {
@@ -21,6 +21,8 @@ const Page = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(AuthCredentialsValidator) });
+
+  const { data } = trpc.antApiRoute.useQuery();
 
   const onSubmit = ({ email, password }: TAuthCredentialValidator) => {
     // send data to the server

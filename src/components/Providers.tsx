@@ -11,7 +11,7 @@ const Providers = ({ children }: PropsWithChildren) => {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: `${process.env.NEXT_PUBLIC_SEVER_URL}/api/trpc`,
+          url: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/trpc`,
           fetch(url, options) {
             return fetch(url, {
               ...options,
@@ -22,6 +22,7 @@ const Providers = ({ children }: PropsWithChildren) => {
       ],
     })
   );
+
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
