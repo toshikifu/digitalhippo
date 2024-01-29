@@ -35,7 +35,7 @@ const yourOwnAndPurchased: Access = async ({ req }) => {
     },
   });
 
-  const purchaseProductFileIds = orders
+  const purchasedProductFileIds = orders
     .map((order) => {
       return order.products.map((product) => {
         if (typeof product === "string")
@@ -53,7 +53,7 @@ const yourOwnAndPurchased: Access = async ({ req }) => {
 
   return {
     id: {
-      in: [...ownProductFileIds, ...purchaseProductFileIds],
+      in: [...ownProductFileIds, ...purchasedProductFileIds],
     },
   };
 };
@@ -73,7 +73,7 @@ export const ProductFiles: CollectionConfig = {
   },
   upload: {
     staticURL: "/product_files",
-    staticDir: "/product_files",
+    staticDir: "product_files",
     mimeTypes: ["image/*", "font/*", "application/postscript"],
   },
   fields: [
