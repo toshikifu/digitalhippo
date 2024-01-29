@@ -49,7 +49,7 @@ export default function Home() {
 
         {/* TODO: List products */}
         <ProductReel
-          query={{ sort: "desc", limit: 4 }}
+          query={{ sort: "desc", limit: 1 }}
           title="Brand new"
           href="/product"
         />

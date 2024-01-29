@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { trpc } from "../trpc/client";
+
 import { TQueryValidator } from "../lib/validators/query-validator";
 import { Product } from "../payload-types";
 import ProductListing from "./ProductListing";
+import { trpc } from "../trpc/client";
 
 interface ProductReelProps {
   title: string;
@@ -28,6 +29,9 @@ const ProductReel = (props: ProductReelProps) => {
         getNextPageParam: (lastPage) => lastPage.nextPage,
       }
     );
+
+  console.log(isLoading ? "loading" : "loading done");
+  console.log(queryResults);
 
   const products = queryResults?.pages.flatMap((page) => page.items);
 
