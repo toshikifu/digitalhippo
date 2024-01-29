@@ -7,7 +7,7 @@ import { cn } from "@/src/lib/utils";
 import {
   AuthCredentialsValidator,
   TAuthCredentialValidator,
-} from "@/src/lib/valitators/accont-credentialsvalidator";
+} from "@/src/lib/validators/accont-credentialsvalidator";
 import { trpc } from "@/src/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";

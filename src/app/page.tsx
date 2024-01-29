@@ -3,6 +3,7 @@ import { Button, buttonVariants } from "@/src/components/ui/button";
 import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import ProductReel from "../components/ProductReel";
 
 const perks = [
   {
@@ -47,6 +48,12 @@ export default function Home() {
         </div>
 
         {/* TODO: List products */}
+        <ProductReel
+          query={{ sort: "desc", limit: 4 }}
+          title="Brand new"
+          subtitle="hogehoge"
+          href="/"
+        />
       </MaxWidthWrapper>
       <section className="border-t border-grey-200 bg-gray-50">
         <MaxWidthWrapper className="py-20">
