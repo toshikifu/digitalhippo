@@ -1,123 +1,106 @@
 "use client";
 
-import { Icons } from "@/src/components/Icons";
-import { Button, buttonVariants } from "@/src/components/ui/button";
-import { Input } from "@/src/components/ui/input";
-import { cn } from "@/src/lib/utils";
-import {
-  AuthCredentialsValidator,
-  TAuthCredentialValidator,
-} from "@/src/lib/validators/accont-credentialsvalidator";
-import { trpc } from "@/src/trpc/client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Label } from "@radix-ui/react-label";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { ZodError } from "zod";
+import React, { useState } from "react";
+import { Button, TextField, Typography, Link, Container } from "@mui/material";
 
-const Page = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: zodResolver(AuthCredentialsValidator) });
+const SignUpForm = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({ email: "", password: "" });
 
-  const router = useRouter();
+  const validateForm = () => {
+    let isValid = true;
+    if (!email) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: "Email is required",
+      }));
+      isValid = false;
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
+    }
 
-  const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({
-    onError: (err) => {
-      if (err.data?.code === "CONFLICT") {
-        toast.error("This email is already in use. Sign in instead?");
-        return;
-      }
+    if (!password) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: "Password is required",
+      }));
+      isValid = false;
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
+    }
 
-      if (err instanceof ZodError) {
-        toast.error(err.issues[0].message);
-        return;
-      }
+    return isValid;
+  };
 
-      toast.error("Something went wrong. Please try again.");
-    },
-
-    onSuccess: ({ sentToEmail }) => {
-      toast.success(`Verification email sent to ${sentToEmail}`);
-      router.push("/verify-email?to=" + sentToEmail);
-    },
-  });
-
-  const onSubmit = ({ email, password }: TAuthCredentialValidator) => {
-    mutate({ email, password });
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (validateForm()) {
+      // ここでサインアップロジックを実装
+      console.log("Submitting", { email, password });
+    }
   };
 
   return (
-    <>
-      <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-          <div className="flex flex-col items-center space-y-2 text-center">
-            <Icons.logo className="h-20 w-20" />
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Create an account
-            </h1>
-
-            <Link
-              className={buttonVariants({
-                variant: "link",
-                className: "gap-1.5",
-              })}
-              href="/sign-in"
-            >
-              Already have an account? Sign-in
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="grid gap-6">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="grid gap-2">
-                <div className="grid gap-1 py-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    {...register("email")}
-                    className={cn({
-                      "focus-visible:ring-red-500": errors.email,
-                    })}
-                    placeholder="you@example.com"
-                  />
-                  {errors?.error && (
-                    <p className="text-sm text-red-500">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="grid gap-1 py-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    {...register("password")}
-                    type="password"
-                    className={cn({
-                      "focus-visible:ring-red-500": errors.password,
-                    })}
-                    placeholder="Password"
-                  />
-                  {errors?.password && (
-                    <p className="text-sm text-red-500">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
-
-                <Button>Sign up</Button>
-              </div>
-            </form>
-          </div>
-        </div>
+    <Container component="main" maxWidth="xs">
+      <div
+        style={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Create an account
+        </Typography>
+        <form onSubmit={handleSubmit} style={{ mt: 3 }}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={!!errors.email}
+            helperText={errors.email}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={!!errors.password}
+            helperText={errors.password}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            style={{ mt: 3, mb: 2 }}
+          >
+            Sign Up
+          </Button>
+          <Link href="/sign-in" variant="body2">
+            {"Already have an account? Sign in"}
+          </Link>
+        </form>
       </div>
-    </>
+    </Container>
   );
 };
 
-export default Page;
+export default SignUpForm;
